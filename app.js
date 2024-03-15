@@ -93,9 +93,9 @@ holeImage.src = "images/hole.png";
 
 //=========done creating image objects ============
 
-var soundgameover = "sounds/gameover.wav"; //game over sound efx
+var soundgameover = new Audio("sounds/gameover.wav"); //game over sound efx
 var soundCaught = "sounds/neigh.wav"; //caught a horse sound efx
-var soundLost = "sounds/lost.wav"; //fell into a hole sound efx
+var soundLost = new Audio("sounds/lost.wav"); //fell into a hole sound efx
 //Assign audio to soundEfx
 var soundEfx = document.getElementById("soundEfx");
 // =============end of sound loading==============
@@ -150,8 +150,37 @@ addEventListener("keyup", function (e) {
 // Add a flag to check if the game has been won
 var gameWon = false;
 
+// Function to reset the game
+var resetGame = function () {
+    reset();
+    monstersCaught = 0;
+    elapsedTime = 0;
+    location.reload(); // Refresh the page
+};
+
+var timeLimit = 10; //time limit in seconds
+var elapsedTime = 0; //elapsed time in seconds
+
 // Update game objects
 var update = function (modifier) {
+        // Increment elapsed time
+        if (!gameWon) {
+            elapsedTime += modifier;
+        }
+
+        // Check if the time limit has been exceeded
+        if (elapsedTime >= timeLimit && !gameWon && !died) {
+            soundLost.play();
+            // Display game over message
+            alert("Time's up! GAME OVER");
+            // Reset the game
+            resetGame();
+        }
+    
+        // Remaining time display
+        // var remainingTime = timeLimit - Math.floor(elapsedTime);
+        // console.log("Time remaining: " + remainingTime + " seconds");
+
     left = false;
     right = false;
     up = false;
@@ -212,13 +241,12 @@ var update = function (modifier) {
     ) {
         ++monstersCaught; // keep track of our “score”
         if (monstersCaught % 5 === 0 && !gameWon) { // Check if 5 monsters have been caught and the game hasn't been won
-            soundEfx.addEventListener("ended", function () {
-                alert("YOU WON!! GAME OVER.");
-                gameWon = true; // Set gameWon to true after displaying the alert
-                resetGame(); // Reset the game
-            });
-            soundEfx.src = soundgameover;
-            soundEfx.play();
+             // Update the game state immediately
+        gameWon = true;
+        // Play the game over sound
+        soundgameover.play();
+        resetGame(); // Reset the game
+        alert("YOU WON!! GAME OVER.");
         } else {
             soundEfx.src = soundCaught;
             soundEfx.play();
@@ -241,9 +269,8 @@ var update = function (modifier) {
         && hero.y <= (hole3.y + 32)
         && hole3.y <= (hero.y + 32))
     ) {
-        // Play game over sound
-        soundEfx.src = soundLost;
-        soundEfx.play();
+        // Play soundLost sound (2nd sound for 2nd way to gameover)
+        soundLost.play();
         // Display game over message
         alert("You fell into a hole and broke your ankle. GAME OVER");
         // Reset the game
@@ -251,12 +278,7 @@ var update = function (modifier) {
         }
 };
 
-// Function to reset the game
-var resetGame = function () {
-    reset();
-    monstersCaught = 0;
-    location.reload(); // Refresh the page
-};
+
 
 // Draw everything in the main render function
 var render = function () {
@@ -297,6 +319,9 @@ var render = function () {
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     ctx.fillText("Horses caught: " + monstersCaught, 32, 32);
+    // Display remaining time
+    var remainingTime = timeLimit - Math.floor(elapsedTime);
+    ctx.fillText("Time remaining: " + remainingTime + " seconds", 32, 64);
 
 
 }
