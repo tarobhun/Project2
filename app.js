@@ -3,7 +3,8 @@ var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = 1000;
 canvas.height = 1000;
-document.body.appendChild(canvas);
+document.getElementById("canvas-holder").appendChild(canvas);
+alert("Oh no! All of the horses have escaped the stables, and it's up to you to get them back! Recapture five horses to win!");
 
 // lots of variables to keep track of sprite geometry
 //  I have 8 rows and 3 cols in my space ship sprite sheet
