@@ -6,8 +6,7 @@ canvas.height = 1000;
 document.getElementById("canvas-holder").appendChild(canvas);
 alert("Oh no! All of the horses have escaped the stables, and it's up to you to get them back! Recapture five horses to win!");
 
-// lots of variables to keep track of sprite geometry
-//  I have 8 rows and 3 cols in my space ship sprite sheet
+//sprite sheet rows/columns
 var rows = 4;
 var cols = 5;
 
@@ -15,7 +14,7 @@ var cols = 5;
 var trackRight = 2;
 //third row for the left movement (counting the index from 0)
 var trackLeft = 1;
-var trackUp = 3;   // not using up and down in this version, see next version
+var trackUp = 3; 
 var trackDown = 0;
 
 var spriteWidth = 400; // also  spriteWidth/cols; 
@@ -96,7 +95,7 @@ holeImage.src = "images/hole.png";
 
 var soundgameover = new Audio("sounds/gameover.wav"); //game over sound efx
 var soundCaught = "sounds/neigh.wav"; //caught a horse sound efx
-var soundLost = new Audio("sounds/lost.wav"); //fell into a hole sound efx
+var soundLost = new Audio("sounds/lost.wav"); //fell into a hole/time's up sound efx
 //Assign audio to soundEfx
 var soundEfx = document.getElementById("soundEfx");
 // =============end of sound loading==============
@@ -148,7 +147,7 @@ addEventListener("keyup", function (e) {
     delete keysDown[e.keyCode];
 }, false);
 
-// Add a flag to check if the game has been won
+// Check if the game has been won
 var gameWon = false;
 
 // Function to reset the game
@@ -177,10 +176,6 @@ var update = function (modifier) {
             // Reset the game
             resetGame();
         }
-    
-        // Remaining time display
-        // var remainingTime = timeLimit - Math.floor(elapsedTime);
-        // console.log("Time remaining: " + remainingTime + " seconds");
 
     left = false;
     right = false;
@@ -191,7 +186,7 @@ var update = function (modifier) {
         hero.y -= hero.speed * modifier;
         up = true; // for animation
     }
-    if (40 in keysDown && hero.y < canvas.height - (96 + 0)) { // holding down key
+    if (40 in keysDown && hero.y < canvas.height - (116 + 0)) { // holding down key
         hero.y += hero.speed * modifier;
         down = true; //for animation
     }
